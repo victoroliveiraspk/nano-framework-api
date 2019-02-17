@@ -10,7 +10,7 @@ class Router {
             throw new Exception('Invalid method.');
         if (!$path)
             throw new Exception('Invalid path.');
-        if (!$callback)
+        if (!is_callable($callback))
             throw new Exception('Invalid callback.');
 
         $method = $this->formatMethod($method);
@@ -22,7 +22,7 @@ class Router {
         $method = $this->formatMethod(strtoupper($_SERVER['REQUEST_METHOD']));
         $path = $this->formatPath($_SERVER['REQUEST_URI']);
         $callback = $this->routes[$method][$path];
-        if ($callback)
+        if (is_callable($callback))
             call_user_func($callback);
     }
 
@@ -31,6 +31,7 @@ class Router {
     }
 
     private function formatPath($path) {
-        return substr($path, 0, 1) === '/' ? substr($path, 1) : $path;
+        $path = substr($path, 0, 1) !== '/' ? '/'.$path : $path;
+        return substr($path, strlen($path) - 1) !== '/' ? $path.'/' : $path; 
     }
 }
