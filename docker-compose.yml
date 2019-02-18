@@ -12,7 +12,6 @@ services:
       - 3306:3306
   web:
     image: php:7.2-apache
-    container_name: php_web
     depends_on:
       - database
     volumes:
