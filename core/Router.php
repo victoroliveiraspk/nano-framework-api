@@ -19,7 +19,7 @@ class Router {
     }
 
     public function run() {
-        $method = $this->formatMethod($_SERVER['REQUEST_METHOD']);
+        $method = $this->formatMethod($this->extractPath());
         $path = $this->formatPath($_SERVER['REQUEST_URI']);
         $callback = $this->routes[$method][$path];
         if (is_callable($callback))
@@ -28,6 +28,10 @@ class Router {
 
     private function formatMethod($method) {
         return strtoupper($method);
+    }
+
+    private function extractPath() {
+        return explode('?', $_SERVER['REQUEST_URI'])[0];
     }
 
     private function formatPath($path) {
