@@ -8,8 +8,8 @@ use core\Router;
 use core\Methods;
 
 $router = new Router();
-$router->on(Methods::GET, '/test', function() {
-    echo 'hsuahus';
+$router->on(Methods::GET, '/test', function($params) {
+    print_r($params);
 });
 
 $router->run();

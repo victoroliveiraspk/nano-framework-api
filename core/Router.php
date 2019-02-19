@@ -2,6 +2,8 @@
 
 namespace core;
 
+use core\Methods;
+
 class Router {
     private $routes = [];
 
@@ -19,11 +21,11 @@ class Router {
     }
 
     public function run() {
-        $method = $this->formatMethod($this->extractPath());
-        $path = $this->formatPath($_SERVER['REQUEST_URI']);
+        $method = $this->formatMethod($_SERVER['REQUEST_METHOD']);
+        $path = $this->formatPath($this->extractPath());
         $callback = $this->routes[$method][$path];
         if (is_callable($callback))
-            call_user_func($callback);
+            call_user_func($callback, $this->getParams($method));
     }
 
     private function formatMethod($method) {
@@ -37,5 +39,9 @@ class Router {
     private function formatPath($path) {
         $path = substr($path, 0, 1) !== '/' ? '/'.$path : $path;
         return substr($path, strlen($path) - 1) !== '/' ? $path.'/' : $path; 
+    }
+
+    private function getParams($method) {
+        return $method == Methods::GET ? $_GET : $_POST;
     }
 }
